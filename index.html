@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-style: normal;
+        font-weight: normal;
+        color: rgb(37, 36, 36);
+      }
+
+      body {
+        width: 100%;
+        max-width: 600px;
+        padding: 50px 0;
+        margin: auto;
+      }
+
+      .header {
+        position: relative;
+        width: 600px;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid gray;
+        padding: 15px 20px;
+      }
+
+      .header__button {
+        padding: 8px 20px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .header__button:last-of-type {
+        margin-left: 10px;
+      }
+
+      .header__word {
+        font-size: 18px;
+        color: #000;
+        background-color: white;
+        position: absolute;
+        padding: 0 10px;
+        top: -12px;
+        left: 10px;
+      }
+
+      .header__button_active {
+        background-color: rgb(49, 103, 202);
+        border: rgb(49, 103, 202);
+        color: white;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: row;
+        max-width: 600px;
+      }
+
+      .sliders {
+        padding: 20px;
+      }
+
+      #red,
+      #green,
+      #blue {
+        width: 275px;
+        margin: 10px 0 20px;
+      }
+
+      #red .ui-slider-range {
+        background: #ef2929;
+      }
+      #red .ui-slider-handle {
+        border-color: #ef2929;
+      }
+      #green .ui-slider-range {
+        background: #8ae234;
+      }
+      #green .ui-slider-handle {
+        border-color: #8ae234;
+      }
+      #blue .ui-slider-range {
+        background: #729fcf;
+      }
+      #blue .ui-slider-handle {
+        border-color: #729fcf;
+      }
+
+      #swatch {
+        width: 250px;
+        height: 100px;
+        margin-top: 20px;
+        margin-left: 10px;
+        padding: 10px 5px;
+        border-radius: 5px;
+      }
+
+      #text {
+        color: rgb(255, 255, 255);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <button class="header__button header__button_first">color</button>
+      <button
+        class="header__button header__button_second header__button_active"
+      >
+        backgroundColor
+      </button>
+      <p class="header__word">Select:</p>
+    </header>
+
+    <main class="main">
+      <section class="sliders">
+        <div id="red"></div>
+        <div id="green"></div>
+        <div id="blue"></div>
+      </section>
+
+      <section id="swatch">
+        <p id="text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+      </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      const color = $(".header__button_first");
+      const backgroundColor = $(".header__button_second");
+
+      backgroundColor.click(function () {
+        backgroundColor.addClass("header__button_active");
+        color.removeClass("header__button_active");
+      });
+      color.click(function () {
+        color.addClass("header__button_active");
+        backgroundColor.removeClass("header__button_active");
+      });
+
+      function hexFromRGB(r, g, b) {
+        const hex = [r.toString(16), g.toString(16), b.toString(16)];
+        $.each(hex, function (nr, val) {
+          if (val.length === 1) {
+            hex[nr] = "0" + val;
+          }
+        });
+        return hex.join("").toUpperCase();
+      }
+
+      function refreshSwatch() {
+        const red = $("#red").slider("value"),
+          green = $("#green").slider("value"),
+          blue = $("#blue").slider("value"),
+          hex = hexFromRGB(red, green, blue);
+        if (backgroundColor.hasClass("header__button_active")) {
+          $("#swatch").css("background-color", "#" + hex);
+        } else if (color.hasClass("header__button_active")) {
+          $("#text").css("color", "#" + hex);
+        }
+      }
+
+      $(function () {
+        $("#red, #green, #blue").slider({
+          orientation: "horizontal",
+          range: "min",
+          max: 255,
+          value: 127,
+          slide: refreshSwatch,
+          change: refreshSwatch,
+        });
+        $("#red").slider("value", 170);
+        $("#green").slider("value", 110);
+        $("#blue").slider("value", 140);
+      });
+    </script>
+  </body>
+</html>
